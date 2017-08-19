@@ -1,0 +1,16 @@
+{
+  "name": "mndp-firebase-auth",
+  "version": "1.0.0",
+  "description": "Authenticate Pnut users with Firebase via a function",
+  "main": "index.js",
+  "author": "Jon Scolamiero",
+  "license": "MIT",
+  "repository": "https://github.com/jdscolam/mndp-firebase-auth",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "firebase-admin": "^5.2.0",
+    "firebase-functions": "^0.6.2",
+    "lodash": "^4.17.4"
+  },
+  "private": true
+}
