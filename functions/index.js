@@ -6,6 +6,7 @@ const functions = require('firebase-functions');
 const admin = require("firebase-admin");
 const cors = require('cors')({origin: true});
 const axios = require('axios');
+const serviceAccount = require('./info.json');
 
 exports.auth = functions.https.onRequest((req, res) => {
 
@@ -36,12 +37,8 @@ function main(req, res){
 
     console.log('Configuring Firebase...');
     let app = admin.initializeApp({
-        credential: admin.credential.cert({
-            projectId: functions.config().project_id,
-            clientEmail: functions.config().client_email,
-            privateKey: functions.config().firebase_token
-        }),
-        databaseURL: functions.config().database_url
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: functions.config().mndp.database_url
     });
 
     let fb = admin.database();

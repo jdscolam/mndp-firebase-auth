@@ -112,3 +112,4 @@ fabric.properties
 
 #Ignore environment variables
 functions/.runtimeconfig.json
+functions/info.json
