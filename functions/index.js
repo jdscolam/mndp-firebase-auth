@@ -76,7 +76,7 @@ function validatePnutToken(token){
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
     console.log('Getting user data...');
-    return axios.get('/v0/token')
+    return axios.get('/v0/users/me')
         .then(function (response) {
             if(response.data.meta.code !== 200){
                 console.log('Error validating token...');
@@ -86,7 +86,7 @@ function validatePnutToken(token){
                 };
             }
 
-            return response.data.data.user;
+            return response.data.data;
         });
 }
 
