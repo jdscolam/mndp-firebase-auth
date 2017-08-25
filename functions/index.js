@@ -47,8 +47,13 @@ function main(req, res){
     let auth = admin.auth();
 
     return processToken(token, show, fb, auth)
-        .then(customToken => {
-            res.status(200).send({ token: customToken});
+        .then(userDetails => {
+            let result = {
+                token: userDetails.customToken,
+                user: userDetails.user
+            };
+
+            res.status(200).send(result);
             return app.delete();
         })
         .catch(error => {
@@ -65,8 +70,8 @@ function processToken(token, show, fb, auth){
 
     return validatePnutToken(token)
         .then(user => processUser(user, show, fb))
-        .then(user => generateFirebaseToken(user, auth))
-        .then(customToken => { return customToken; });
+        .then(userDetails => generateFirebaseToken(userDetails, auth))
+        .then(userDetails => { return userDetails; });
 }
 
 function validatePnutToken(token){
@@ -96,7 +101,7 @@ function processUser(user, show, fb){
 
     if(!show){
         console.log('No show found...');
-        return { username: user.username };
+        return { user: user };
     }
 
     console.log('Show found.  Checking if user is valid DJ for ' + show + '...');
@@ -114,24 +119,31 @@ function processUser(user, show, fb){
         if(isDj){
             console.log(user.username + ' is DJ for ' + show + '...');
             return {
-                username: user.username,
+                user: user,
                 mondaynightdanceparty: true
             };
         }
 
-        return { username: user.username };
+        return { user: user };
     });
 }
 
-function generateFirebaseToken(user, auth){
+function generateFirebaseToken(userDetails, auth){
     console.log('Generating Firebase token...');
 
-    if(user.mondaynightdanceparty){
+    if(userDetails.mondaynightdanceparty){
         let additionalClaims = { mondaynightdanceparty: true };
 
-        return auth.createCustomToken(user.username, additionalClaims);
+        return auth.createCustomToken(userDetails.user.username, additionalClaims)
+            .then(customToken => {
+                userDetails.customToken = customToken;
+                return userDetails;
+            });
     }
 
-    return auth.createCustomToken(user.username);
-
+    return auth.createCustomToken(userDetails.user.username)
+        .then(customToken => {
+            userDetails.customToken = customToken;
+            return userDetails;
+        });
 }
