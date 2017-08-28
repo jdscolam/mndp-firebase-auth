@@ -110,10 +110,11 @@ function processUser(user, show, fb){
 
     return djsRef.once('value').then(snapshot =>{
         let isDj = false;
+
         snapshot.forEach(x =>{
             isDj = x.val() === user.username;
             if(isDj)
-                return false;
+                return true;
         });
 
         if(isDj){
